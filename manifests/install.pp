@@ -194,10 +194,16 @@ define jdk_oracle::install(
               require => File['/etc/alternatives/jar'],
             }
           }
-          file { '/etc/profile.d/java.sh':
-            ensure  => present,
-            content => "export JAVA_HOME=${java_home}; PATH=\${PATH}:${java_home}/bin",
-            require => Exec["extract_${package}_${version}"],
+
+          if ! defined(File["/etc/profile.d/java.sh"]) {
+            file { "/etc/profile.d/java.sh":
+              ensure   => 'file',
+              content  => template("jdk_oracle/profile.d.erb"),
+              owner    => 'root',
+              group    => 'root',
+              mode     => '0644',
+              require  => Exec["extract_${package}_${version}"],
+            }
           }
         }
         if ( $create_symlink ) {
@@ -262,11 +268,16 @@ define jdk_oracle::install(
               onlyif  => "test $(/bin/readlink /etc/alternatives/jstack) != '${java_home}/bin/jstack'",
             }
           }
-          augeas { 'environment':
-            context => '/files/etc/environment',
-            changes => [
-              "set JAVA_HOME ${java_home}",
-            ],
+
+          if ! defined(File["/etc/profile.d/java.sh"]) {
+            file { "/etc/profile.d/java.sh":
+              ensure   => 'file',
+              content  => template("jdk_oracle/profile.d.erb"),
+              owner    => 'root',
+              group    => 'root',
+              mode     => '0644',
+              require  => Exec["extract_${package}_${version}"],
+            }
           }
         }
       }

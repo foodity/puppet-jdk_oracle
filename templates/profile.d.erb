@@ -1,0 +1,7 @@
+# Add JAVA_HOME to environment
+
+export JAVA_HOME="<%=@java_home%>"
+
+if ! echo $PATH | grep -q "$JAVA_HOME/bin" ; then
+  export PATH=$PATH:$JAVA_HOME/bin
+fi
