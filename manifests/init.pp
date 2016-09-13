@@ -57,8 +57,12 @@ class jdk_oracle (
   $package        = hiera('jdk_oracle::package',        'jdk' ),
   $jce            = hiera('jdk_oracle::jce',            false ),
   $default_java   = hiera('jdk_oracle::default_java',   true ),
+  $symlink_paths  = hiera('jdk_oracle::symlink_paths',  [
+    "${install_dir}/java_home",
+    "${install_dir}/${package}-${version}"
+  ]),
   $ensure         = 'installed'
-  ) {
+) {
 
   jdk_oracle::install { 'jdk_oracle':
     ensure         => $ensure,
@@ -72,6 +76,7 @@ class jdk_oracle (
     package        => $package,
     jce            => $jce,
     default_java   => $default_java,
+    symlink_paths  => $symlink_paths,
   }
 
   if ! defined(Package['wget']) {

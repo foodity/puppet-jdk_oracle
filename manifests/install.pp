@@ -10,8 +10,15 @@ define jdk_oracle::install(
   $jce            = false,
   $default_java   = true,
   $create_symlink = true,
+  $symlink_paths   = [
+    "${install_dir}/java_home",
+    "${install_dir}/${package}-${version}"
+  ],
   $ensure         = 'installed'
-  ) {
+) {
+  validate_array($symlink_paths)
+
+  notice($symlink_paths)
 
   $default_8_update = '11'
   $default_8_build  = '12'
@@ -207,15 +214,12 @@ define jdk_oracle::install(
           }
         }
         if ( $create_symlink ) {
-          file { "${install_dir}/java_home":
-            ensure  => link,
-            target  => $java_home,
-            require => Exec["extract_${package}_${version}"],
-          }
-          file { "${install_dir}/${package}-${version}":
-            ensure  => link,
-            target  => $java_home,
-            require => Exec["extract_${package}_${version}"],
+          $symlink_paths.each |$symlink_path| {
+            file { "$symlink_path":
+              ensure  => link,
+              target  => $java_home,
+              require => Exec["extract_${package}_${version}"],
+            }
           }
         }
       }
@@ -277,6 +281,15 @@ define jdk_oracle::install(
               group    => 'root',
               mode     => '0644',
               require  => Exec["extract_${package}_${version}"],
+            }
+          }
+          if ( $create_symlink ) {
+            $symlink_paths.each |$symlink_path| {
+              file { "$symlink_path":
+                ensure  => link,
+                target  => $java_home,
+                require => Exec["extract_${package}_${version}"],
+              }
             }
           }
         }
