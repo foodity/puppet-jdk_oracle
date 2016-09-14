@@ -1,3 +1,4 @@
+# note this only supports jdk and server-jre for now
 define jdk_oracle::equivs (
   $package         = 'jdk',
   $version         = '8',
@@ -102,26 +103,28 @@ define jdk_oracle::equivs (
     }
   }
 
-  $control_file = '/var/install/java/pkg/oracle-java-dummy.control'
+  $package_name = "oracle-jdk-dummy"
+  $control_file = '/tmp/oracle-java-dummy.control'
   file { "$control_file":
     ensure   => file,
     content  => template("jdk_oracle/oracle-java-dummy.control.erb"),
     require  => Package["equivs"],
   }
 
+  # cannot use unless as package resource does not have unless, and there's no easy of ensuring the debian file exists
   exec { "/usr/bin/equivs-build $control_file":
     cwd     => '/tmp',
     require => File["$control_file"],
-    unless  => '/usr/bin/dpkg-query -W --showformat "${Status} ${Package} ${Version}\n" oracle-jdk-dummy'
+    # unless  => '/usr/bin/dpkg-query -W --showformat "${Status} ${Package} ${Version}\n" oracle-jdk-dummy'
   }
 
   $deb_file = "/tmp/oracle-jdk-dummy_1.${version}_all.deb"
-  package { "oracle-jdk-dummy":
+  package { "$package_name":
     provider => dpkg,
-    ensure   => latest,
+    ensure   => present,
     source   => $deb_file,
-    require  => Exec["/usr/bin/equivs-build $control_file"],
-    unless   => "test ! -f $deb_file"
+    require  => Exec["/usr/bin/equivs-build $control_file"]
+    # unless   => "test ! -f $deb_file"
   }
 
 }

@@ -380,7 +380,7 @@ define jdk_oracle::install(
 
     }
 
-    if $use_equivs == true {
+    if $use_equivs == true and ($package == 'jdk' or $package == 'server-jre') {
       jdk_oracle::equivs { 'jdk_oracle':
         version        => $version,
         package        => $package,

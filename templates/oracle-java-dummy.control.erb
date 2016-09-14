@@ -1,12 +1,12 @@
-Package: oracle-jdk-dummy
+Package: <%=@package_name%>
 Version: 1.<%=@version%>
 Section: non-free/java
 Priority: optional
 Homepage: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
 Depends: java-common, locales
-Provides: <%=@provides%>
-Replaces: <%=@replaces%>
+Provides: <%=@provides.join(", ")%>
+Replaces: <%=@replaces.join(", ")%>
 Architecture: all
 Description: Dummy package providing Java(TM) Development Kit (JDK) 7
  This package does NOT provide JDK binaries, it is here only to fulfill
