@@ -114,8 +114,8 @@ define jdk_oracle::equivs (
     package { 'equivs':
       ensure    => present,
       require   => [
-        package["java-common"],
-        package["locales"]
+        Package["java-common"],
+        Package["locales"]
       ]
     }
   }
