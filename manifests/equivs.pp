@@ -96,10 +96,27 @@ define jdk_oracle::equivs (
     }
   }
 
+  if ! defined(Package["java-common"]) {
+    package { 'java-common':
+      ensure    => present,
+      require   => Exec["extract_${package}_${version}"]
+    }
+  }
+
+  if ! defined(Package["locales"]) {
+    package { 'locales':
+      ensure    => present,
+      require   => Exec["extract_${package}_${version}"]
+    }
+  }
+
   if ! defined(Package["equivs"]) {
     package { 'equivs':
       ensure    => present,
-      require   => Exec["extract_${package}_${version}"]
+      require   => [
+        package["java-common"],
+        package["locales"]
+      ]
     }
   }
 
