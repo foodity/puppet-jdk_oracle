@@ -1,15 +1,16 @@
 define jdk_oracle::install(
-  $version        = '8',
-  $version_update = 'default',
-  $version_build  = 'default',
-  $install_dir    = '/opt',
-  $use_cache      = false,
-  $cache_source   = 'puppet:///modules/jdk_oracle/',
-  $platform       = 'x64',
-  $package        = 'jdk',
-  $jce            = false,
-  $default_java   = true,
-  $create_symlink = true,
+  $version         = '8',
+  $version_update  = 'default',
+  $version_build   = 'default',
+  $install_dir     = '/opt',
+  $use_cache       = false,
+  $cache_source    = 'puppet:///modules/jdk_oracle/',
+  $platform        = 'x64',
+  $package         = 'jdk',
+  $jce             = false,
+  $default_java    = true,
+  $create_symlink  = true,
+  $use_equivs      = false,
   $symlink_paths   = [
     "${install_dir}/java_home",
     "${install_dir}/${package}-${version}"
@@ -377,6 +378,13 @@ define jdk_oracle::install(
         require => Exec['extract_jce'],
       }
 
+    }
+
+    if $use_equivs == true {
+      jdk_oracle::equivs { 'jdk_oracle':
+        version        => $version,
+        package        => $package,
+      }
     }
 
   }

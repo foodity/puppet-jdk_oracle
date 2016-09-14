@@ -1,0 +1,18 @@
+Package: oracle-jdk-dummy
+Version: 1.<%=@version%>
+Section: non-free/java
+Priority: optional
+Homepage: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+Depends: java-common, locales
+Provides: <%=@provides%>
+Replaces: <%=@replaces%>
+Architecture: all
+Description: Dummy package providing Java(TM) Development Kit (JDK) 7
+ This package does NOT provide JDK binaries, it is here only to fulfill
+ dependencies of other packages.
+ .
+ You probably will want to use this package if you have installed the compiler
+ "by hand" or from package that does not provide JDK dependency.
+ All information regarding Java itself can be found on this website:
+ http://www.oracle.com/
